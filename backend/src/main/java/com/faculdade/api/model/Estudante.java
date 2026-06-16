@@ -11,10 +11,11 @@ public class Estudante {
     private String matEstudante;
 
     @Column(name = "mc", precision = 2, scale = 2)
-    private BigDecimal mc; // Média Geral Comercial / Coeficiente
+    private BigDecimal mc;
 
-    @Column(name = "usuario_cpf", length = 12)
-    private String usuarioCpf;
+
+    @Column(name = "cpf")
+    private String cpf;
 
     @Column(name = "ano_ingresso")
     private Integer anoIngresso;
@@ -38,12 +39,12 @@ public class Estudante {
         this.mc = mc;
     }
 
-    public String getUsuarioCpf() {
-        return usuarioCpf;
+    public String getCpf() {
+        return cpf;
     }
 
-    public void setUsuarioCpf(String usuarioCpf) {
-        this.usuarioCpf = usuarioCpf;
+    public void setCpf(String usuarioCpf) {
+        this.cpf = usuarioCpf;
     }
 
     public Integer getAnoIngresso() {

@@ -1,10 +1,12 @@
 package com.faculdade.api.controller;
 
 import com.faculdade.api.model.Turma;
+import com.faculdade.api.repository.TurmaRepository;
 import com.faculdade.api.service.TurmaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -18,7 +20,8 @@ public class TurmaController{
         this.service = service;
     }
 
-    public ResponseEntity<Turma> cadastrar(@RequestBody Turma turma){
+    @PostMapping
+    public ResponseEntity<Turma> cadastrar(@RequestBody Turma turma) {
         Turma novaTurma = service.cadastrar(turma);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaTurma);
     }

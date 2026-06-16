@@ -1,20 +1,24 @@
 package com.faculdade.api.repository;
 
 import com.faculdade.api.model.Cursa;
-import com.faculdade.api.model.pk.CursaId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
-public interface CursaRepository extends JpaRepository<Cursa, CursaId> {
+public interface CursaRepository extends JpaRepository<Cursa, Object> {
 
-    // Gera um: SELECT * FROM Cursa WHERE mat_estudante = ?
-    // Usado para buscar o boletim do aluno
-    List<Cursa> findByIdMatEstudante(String matEstudante);
+    // ADICIONE ESTE: Busca as matrículas pelo código/matrícula do estudante
+    List<Cursa> findByEstudanteMatEstudante(String matEstudante);
 
-    // Gera um: SELECT * FROM Cursa WHERE id_turma = ?
-    // Usado para listar o Diário de Classe do professor
-    List<Cursa> findByIdIdTurma(Long idTurma);
+    @Query(value = "SELECT * FROM cursa c WHERE c.id_turma = ?1", nativeQuery = true)
+    List<Cursa> findByTurmaIdTurma(Long idTurma);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Cursa c WHERE c.estudante.matEstudante = ?1 AND c.turma.idTurma = ?2")
+    void deletarMatricula(String matEstudante, Long idTurma);
 }

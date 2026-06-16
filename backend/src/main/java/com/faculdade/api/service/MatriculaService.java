@@ -49,14 +49,14 @@ public class MatriculaService {
         if (!estudanteRepository.existsById(matEstudante)) {
             throw new RuntimeException("Estudante não encontrado!");
         }
-        return cursaRepository.findByIdMatEstudante(matEstudante);
+        return cursaRepository.findByEstudanteMatEstudante(matEstudante);
     }
 
     public List<Cursa> buscarAlunosDaTurma(Long idTurma) {
         if (!turmaRepository.existsById(idTurma)) {
             throw new RuntimeException("Turma não encontrada!");
         }
-        return cursaRepository.findByIdIdTurma(idTurma);
+        return cursaRepository.findByTurmaIdTurma(idTurma);
     }
 
     @Transactional
@@ -66,7 +66,12 @@ public class MatriculaService {
         Cursa matricula = cursaRepository.findById(idComposto)
                 .orElseThrow(() -> new RuntimeException("Matrícula não encontrada! O aluno não pertence a esta turma."));
 
-        matricula.setNota(dto.getNota());
+
+        matricula.setNota1(dto.getNota1());
+        matricula.setNota2(dto.getNota2());
+        matricula.setNota3(dto.getNota3());
+        matricula.setFaltas(dto.getFaltas());
+
         return cursaRepository.save(matricula);
     }
 

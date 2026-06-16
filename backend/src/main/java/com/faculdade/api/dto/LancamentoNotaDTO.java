@@ -1,51 +1,29 @@
 package com.faculdade.api.dto;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
-import java.math.BigDecimal;
-
 public class LancamentoNotaDTO {
-
-    @NotBlank(message = "A matrícula do estudante é obrigatória")
     private String matEstudante;
-
-    @NotNull(message = "O ID da turma é obrigatório")
     private Long idTurma;
+    private Double nota1;
+    private Double nota2;
+    private Double nota3;
+    private Integer faltas;
 
-    @NotNull(message = "A nota não pode ser nula")
-    @DecimalMin(value = "0.0", message = "A nota mínima permitida é 0.0")
-    @DecimalMax(value = "10.0", message = "A nota máxima permitida é 10.0")
-    private BigDecimal nota;
+    // --- GETTERS E SETTERS ---
+    public String getMatEstudante() { return matEstudante; }
+    public void setMatEstudante(String matEstudante) { this.matEstudante = matEstudante; }
 
-    // Construtor Padrão
-    public LancamentoNotaDTO() {
-    }
+    public Long getIdTurma() { return idTurma; }
+    public void setIdTurma(Long idTurma) { this.idTurma = idTurma; }
 
-    // Getters e Setters
-    public String getMatEstudante() {
-        return matEstudante;
-    }
+    public Double getNota1() { return nota1; }
+    public void setNota1(Double nota1) { this.nota1 = nota1; }
 
-    public void setMatEstudante(String matEstudante) {
-        this.matEstudante = matEstudante;
-    }
+    public Double getNota2() { return nota2; }
+    public void setNota2(Double nota2) { this.nota2 = nota2; }
 
-    public Long getIdTurma() {
-        return idTurma;
-    }
+    public Double getNota3() { return nota3; }
+    public void setNota3(Double nota3) { this.nota3 = nota3; }
 
-    public void setIdTurma(Long idTurma) {
-        this.idTurma = idTurma;
-    }
-
-    public BigDecimal getNota() {
-        return nota;
-    }
-
-    public void setNota(BigDecimal nota) {
-        this.nota = nota;
-    }
+    public Integer getFaltas() { return faltas; }
+    public void setFaltas(Integer faltas) { this.faltas = faltas; }
 }
