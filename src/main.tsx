@@ -3,7 +3,7 @@ import typescriptLogo from './assets/typescript.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import { setupCounter } from './counter.ts'
-import 'bootstrap/dist/css/css.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <section id="center">
