@@ -1,9 +1,13 @@
 package com.faculdade.api.dto;
 
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class MatriculaDTO {
+import java.math.BigDecimal;
+
+public class LancamentoNotaDTO {
 
     @NotBlank(message = "A matrícula do estudante é obrigatória")
     private String matEstudante;
@@ -11,8 +15,13 @@ public class MatriculaDTO {
     @NotNull(message = "O ID da turma é obrigatório")
     private Long idTurma;
 
+    @NotNull(message = "A nota não pode ser nula")
+    @DecimalMin(value = "0.0", message = "A nota mínima permitida é 0.0")
+    @DecimalMax(value = "10.0", message = "A nota máxima permitida é 10.0")
+    private BigDecimal nota;
+
     // Construtor Padrão
-    public MatriculaDTO() {
+    public LancamentoNotaDTO() {
     }
 
     // Getters e Setters
@@ -30,5 +39,13 @@ public class MatriculaDTO {
 
     public void setIdTurma(Long idTurma) {
         this.idTurma = idTurma;
+    }
+
+    public BigDecimal getNota() {
+        return nota;
+    }
+
+    public void setNota(BigDecimal nota) {
+        this.nota = nota;
     }
 }
