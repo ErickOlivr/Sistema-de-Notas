@@ -11,10 +11,9 @@ import java.util.List;
 @Repository
 public interface CursaRepository extends JpaRepository<Cursa, Object> {
 
-    // ADICIONE ESTE: Busca as matrículas pelo código/matrícula do estudante
     List<Cursa> findByEstudanteMatEstudante(String matEstudante);
 
-    @Query(value = "SELECT * FROM cursa c WHERE c.id_turma = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM universidade.cursa c WHERE c.id_turma = ?1", nativeQuery = true)
     List<Cursa> findByTurmaIdTurma(Long idTurma);
 
     @Transactional

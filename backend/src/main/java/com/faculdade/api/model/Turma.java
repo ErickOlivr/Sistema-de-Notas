@@ -1,57 +1,40 @@
 package com.faculdade.api.model;
 
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
+// Força o Hibernate a ler do schema correto do seu dump
 @Table(name = "turma", schema = "universidade")
 public class Turma {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_turma")
-    @JsonProperty("idTurma")
     private Long idTurma;
 
-    @Column(name = "cod_disc", length = 8, nullable = false)
-    @JsonProperty("disciplina")
-    private String disciplina;
+    @Column(name = "numero")
+    private Integer numero;
 
-    @Column(name = "turma", nullable = false)
-    @JsonProperty("codigoTurma") // Faz o Java entender o 'codigoTurma' que vem do React
-    private Integer codigoTurma;
+    @ManyToOne
+    @JoinColumn(name = "cod_disc")
+    private Disciplina disciplina;
 
-    @Column(name = "ano", nullable = false)
-    @JsonProperty("ano")
-    private Integer ano;
+    private Short ano;
+    private Short semestre;
 
-    @Column(name = "semestre", nullable = false)
-    @JsonProperty("semestre")
-    private Integer semestre;
-
-
-    public Turma() {}
-
-    public Long getId() {
-        return idTurma;
-    }
-
-    public void setId(Long id) {
-        this.idTurma = id;
-    }
-
+    // --- GETTERS E SETTERS ---
     public Long getIdTurma() { return idTurma; }
     public void setIdTurma(Long idTurma) { this.idTurma = idTurma; }
 
-    public String getDisciplina() { return disciplina; }
-    public void setDisciplina(String disciplina) { this.disciplina = disciplina; }
+    public Integer getNumero() { return numero; }
+    public void setNumero(Integer numero) { this.numero = numero; }
 
-    public Integer getCodigoTurma() { return codigoTurma; }
-    public void setCodigoTurma(Integer codigoTurma) { this.codigoTurma = codigoTurma; }
+    public Short getAno() { return ano; }
+    public void setShort(Short ano) { this.ano = ano; }
 
-    public Integer getAno() { return ano; }
-    public void setAno(Integer ano) { this.ano = ano; }
+    public Short getSemestre() { return semestre; }
+    public void setSemestre(Short semestre) { this.semestre = semestre; }
 
-    public Integer getSemestre() { return semestre; }
-    public void setSemestre(Integer semestre) { this.semestre = semestre; }
+    public Disciplina getDisciplina() { return disciplina; }
+    public void setDisciplina(Disciplina disciplina) { this.disciplina = disciplina; }
 }

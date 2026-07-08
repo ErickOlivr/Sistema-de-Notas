@@ -1,7 +1,8 @@
 package com.faculdade.api.model;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "Estudante")
@@ -10,11 +11,11 @@ public class Estudante {
     @Column(name = "mat_estudante", length = 12)
     private String matEstudante;
 
-    @Column(name = "mc", precision = 2, scale = 2)
-    private BigDecimal mc;
+    @Column(name = "mc")
+    private Double mc;
 
 
-    @Column(name = "cpf")
+    @Column(name = "cpf", columnDefinition = "universidade.tipo_cpf")
     private String cpf;
 
     @Column(name = "ano_ingresso")
@@ -31,11 +32,11 @@ public class Estudante {
         this.matEstudante = matEstudante;
     }
 
-    public BigDecimal getMc() {
+    public Double getMc() {
         return mc;
     }
 
-    public void setMc(BigDecimal mc) {
+    public void setMc(Double mc) {
         this.mc = mc;
     }
 

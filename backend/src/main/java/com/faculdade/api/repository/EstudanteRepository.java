@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface EstudanteRepository extends JpaRepository<Estudante, String> {
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO estudante (mat_estudante, cpf, ano_ingresso) VALUES (:matricula, :cpf\\:\\:tipo_cpf, :ano)", nativeQuery = true)
+    @Query(value = "INSERT INTO universidade.estudante (mat_estudante, cpf, ano_ingresso) VALUES (:matricula, CAST(:cpf AS NUMERIC), :ano)", nativeQuery = true)
     void salvarEstudanteNativo(@Param("matricula") String matricula, @Param("cpf") String cpf, @Param("ano") Integer ano);
 }
