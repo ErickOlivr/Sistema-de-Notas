@@ -8,11 +8,16 @@ export interface Estudante {
 }
 
 export interface Turma {
-    idTurma?: number; 
-    disciplina: string;
-    codigoTurma: number;
+    idTurma: number;
     ano: number;
     semestre: number;
+    disciplina?: {
+        codDisc: string;
+        nome: string;
+        cargaHoraria?: number;
+    };
+    numero?: number;       
+    codigoTurma?: string;  
 }
 
 export interface Disciplina {

@@ -3,19 +3,6 @@ import { matriculaService } from '../services/matriculaService';
 import { estudanteService } from '../services/estudanteService'; 
 import { turmaService } from '../services/turmaService';
 
-interface EstudanteSimplificado {
-    matEstudante: string;
-    nome: string;
-}
-
-interface TurmaSimplificada {
-    idTurma: number;
-    disciplina: string;
-    codigoTurma: number;
-    ano: number;
-    semestre: number;
-}
-
 export default function Matriculas() {
     const [estudantes, setEstudantes] = useState<any[]>([]);
     const [turmas, setTurmas] = useState<any[]>([]);
@@ -113,7 +100,8 @@ export default function Matriculas() {
                                 <option value="">-- Escolha a Turma --</option>
                                 {turmas.map(t => (
                                     <option key={t.idTurma} value={t.idTurma}>
-                                        ID: {t.idTurma} | {t.disciplina} - Turma {t.codigoTurma} ({t.ano}/{t.semestre}º)
+                                        {/* CORRIGIDO: Acessa o nome da disciplina e o número da turma com segurança para não quebrar a tela */}
+                                        ID: {t.idTurma} | {t.disciplina?.nome || t.disciplina?.codDisc || "Sem Nome"} - Turma {t.numero ?? t.codigoTurma ?? "N/A"} ({t.ano}/{t.semestre}º)
                                     </option>
                                 ))}
                             </select>
@@ -145,16 +133,16 @@ export default function Matriculas() {
                         matriculas.map((m, index) => (
                             <tr key={index}>
                                 <td>{m.estudante?.matEstudante}</td>
-                                <td>{m.estudante?.nome}</td>
-                                <td>{m.turma?.disciplina}</td>
-                                <td>{m.turma?.codigoTurma}</td>
+                                <td>{m.estudante?.nome || "Aluno Registrado"}</td>
+                                <td>{m.turma?.disciplina?.nome || "Sem Disciplina"}</td>
+                                <td>{m.turma?.numero ?? m.turma?.codigoTurma ?? "N/A"}</td>
                                 <td>{m.turma?.ano}/{m.turma?.semestre}º</td>
                                 <td className="text-center">
                                     <button 
                                         onClick={() => handleCancelarMatricula(m.estudante?.matEstudante, m.turma?.idTurma)}
                                         className="btn btn-danger btn-sm"
                                     >
-                                        Cancelar Matrícula
+                                        🗑️ Cancelar Matrícula
                                     </button>
                                 </td>
                             </tr>

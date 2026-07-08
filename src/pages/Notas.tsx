@@ -90,7 +90,7 @@ export default function Notas() {
                             <option value="">-- Escolha uma Turma --</option>
                             {turmas.map(t => (
                                 <option key={t.idTurma} value={t.idTurma}>
-                                    ID: {t.idTurma} | {t.disciplina} - Turma {t.codigoTurma || t.turma} ({t.ano}/{t.semestre}º)
+                                    ID: {t.idTurma} | {t.disciplina?.nome || t.disciplina} - Turma {t.numero}
                                 </option>
                             ))}
                         </select>
