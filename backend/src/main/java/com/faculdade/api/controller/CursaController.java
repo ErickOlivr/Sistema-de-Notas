@@ -25,7 +25,7 @@ public class CursaController {
     }
 
     @GetMapping("/turma/{idTurma}")
-    public ResponseEntity<List<Cursa>> listarPorTurma(@PathVariable("idTurma") Long idTurma) {
+    public ResponseEntity<List<Cursa>> listarPorTurma(@PathVariable("idTurma") Integer idTurma) {
         return ResponseEntity.ok(cursaRepository.findByTurmaIdTurma(idTurma));
     }
 

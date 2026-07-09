@@ -29,4 +29,16 @@ public class DisciplinaController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(disciplina));
     }
+
+    @DeleteMapping("/{codDisc}")
+    public ResponseEntity<Void> deletar(@PathVariable String codDisc) {
+        // Verifica se a disciplina existe na base de dados
+        if (!repository.existsById(codDisc)) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // Se existir, tenta apagar
+        repository.deleteById(codDisc);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -14,9 +14,12 @@ public class Estudante {
     @Column(name = "mc")
     private Double mc;
 
-
     @Column(name = "cpf", columnDefinition = "universidade.tipo_cpf")
     private String cpf;
+
+    @OneToOne
+    @JoinColumn(name = "cpf", referencedColumnName = "cpf", insertable = false, updatable = false)
+    private Usuario usuario;
 
     @Column(name = "ano_ingresso")
     private Integer anoIngresso;
@@ -55,5 +58,8 @@ public class Estudante {
     public void setAnoIngresso(Integer anoIngresso) {
         this.anoIngresso = anoIngresso;
     }
+
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 }
 

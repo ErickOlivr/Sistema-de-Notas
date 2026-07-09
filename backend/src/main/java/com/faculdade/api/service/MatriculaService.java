@@ -52,7 +52,7 @@ public class MatriculaService {
         return cursaRepository.findByEstudanteMatEstudante(matEstudante);
     }
 
-    public List<Cursa> buscarAlunosDaTurma(Long idTurma) {
+    public List<Cursa> buscarAlunosDaTurma(Integer idTurma) {
         if (!turmaRepository.existsById(idTurma)) {
             throw new RuntimeException("Turma não encontrada!");
         }
@@ -76,7 +76,7 @@ public class MatriculaService {
     }
 
     @Transactional
-    public void cancelarMatricula(String matEstudante, Long idTurma) {
+    public void matricular(String matEstudante, Integer idTurma) {
         CursaId idComposto = new CursaId(matEstudante, idTurma);
         if (!cursaRepository.existsById(idComposto)) {
             throw new RuntimeException("Matrícula não encontrada para cancelamento.");

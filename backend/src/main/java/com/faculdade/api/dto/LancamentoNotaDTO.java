@@ -2,7 +2,7 @@ package com.faculdade.api.dto;
 
 public class LancamentoNotaDTO {
     private String matEstudante;
-    private Long idTurma;
+    private Integer idTurma;
     private Double nota1;
     private Double nota2;
     private Double nota3;
@@ -12,8 +12,8 @@ public class LancamentoNotaDTO {
     public String getMatEstudante() { return matEstudante; }
     public void setMatEstudante(String matEstudante) { this.matEstudante = matEstudante; }
 
-    public Long getIdTurma() { return idTurma; }
-    public void setIdTurma(Long idTurma) { this.idTurma = idTurma; }
+    public Integer getIdTurma() { return idTurma; }
+    public void setIdTurma(Integer idTurma) { this.idTurma = idTurma; }
 
     public Double getNota1() { return nota1; }
     public void setNota1(Double nota1) { this.nota1 = nota1; }

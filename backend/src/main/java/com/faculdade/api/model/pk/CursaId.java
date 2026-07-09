@@ -12,30 +12,28 @@ public class CursaId implements Serializable {
     private String matEstudante;
 
     @Column(name = "id_turma")
-    private Long idTurma;
+    private Integer idTurma; // <-- Atualizado para Integer para bater com a Turma!
 
-    // Construtor padrão obrigatório pelo JPA
     public CursaId() {}
 
-    public CursaId(String matEstudante, Long idTurma) {
+    public CursaId(String matEstudante, Integer idTurma) {
         this.matEstudante = matEstudante;
         this.idTurma = idTurma;
     }
 
-    // Getters e Setters
     public String getMatEstudante() { return matEstudante; }
     public void setMatEstudante(String matEstudante) { this.matEstudante = matEstudante; }
 
-    public Long getIdTurma() { return idTurma; }
-    public void setIdTurma(Long idTurma) { this.idTurma = idTurma; }
+    public Integer getIdTurma() { return idTurma; }
+    public void setIdTurma(Integer idTurma) { this.idTurma = idTurma; }
 
-    // Equals e HashCode são obrigatórios para chaves compostas
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CursaId cursaId = (CursaId) o;
-        return Objects.equals(matEstudante, cursaId.matEstudante) && Objects.equals(idTurma, cursaId.idTurma);
+        return Objects.equals(matEstudante, cursaId.matEstudante) &&
+               Objects.equals(idTurma, cursaId.idTurma);
     }
 
     @Override

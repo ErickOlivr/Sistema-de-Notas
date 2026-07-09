@@ -31,12 +31,12 @@ public class TurmaController{
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Turma> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<Turma> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }

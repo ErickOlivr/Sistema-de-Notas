@@ -14,7 +14,7 @@ public interface CursaRepository extends JpaRepository<Cursa, Object> {
     List<Cursa> findByEstudanteMatEstudante(String matEstudante);
 
     @Query(value = "SELECT * FROM universidade.cursa c WHERE c.id_turma = ?1", nativeQuery = true)
-    List<Cursa> findByTurmaIdTurma(Long idTurma);
+    List<Cursa> findByTurmaIdTurma(Integer idTurma);
 
     @Transactional
     @Modifying
