@@ -9,7 +9,7 @@ public class MatriculaDTO {
     private String matEstudante;
 
     @NotNull(message = "O ID da turma é obrigatório")
-    private Long idTurma;
+    private Integer idTurma;
 
     // Construtor Padrão
     public MatriculaDTO() {
@@ -24,11 +24,7 @@ public class MatriculaDTO {
         this.matEstudante = matEstudante;
     }
 
-    public Long getIdTurma() {
-        return idTurma;
-    }
+public Integer getIdTurma() { return idTurma; }
+public void setIdTurma(Integer idTurma) { this.idTurma = idTurma; }
 
-    public void setIdTurma(Long idTurma) {
-        this.idTurma = idTurma;
-    }
 }

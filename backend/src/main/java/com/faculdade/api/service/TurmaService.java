@@ -25,13 +25,13 @@ public class TurmaService {
         return repository.findAll();
     }
 
-    public Turma buscarPorId(Long id) {
+    public Turma buscarPorId(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Turma não encontrada!"));
     }
 
     @Transactional
-    public void deletar(Long id) {
+    public void deletar(Integer id) {
         if (!repository.existsById(id)) {
             throw new RuntimeException("Turma não encontrada para exclusão!");
         }

@@ -1,40 +1,64 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select'; 
 import { matriculaService } from '../services/matriculaService';
-import { estudanteService } from '../services/estudanteService'; 
+import { estudanteService } from '../services/estudanteService';
 import { turmaService } from '../services/turmaService';
+import type { Cursa, Estudante, Turma } from '../types';
 
 export default function Matriculas() {
-    const [estudantes, setEstudantes] = useState<any[]>([]);
-    const [turmas, setTurmas] = useState<any[]>([]);
-    const [matriculas, setMatriculas] = useState<any[]>([]);
-    
+    const [matriculas, setMatriculas] = useState<Cursa[]>([]);
+    const [estudantes, setEstudantes] = useState<Estudante[]>([]);
+    const [turmas, setTurmas] = useState<Turma[]>([]);
+
     const [selectedEstudante, setSelectedEstudante] = useState('');
     const [selectedTurma, setSelectedTurma] = useState('');
 
+    const corrigirTexto = (texto?: string) => {
+        if (!texto) return "";
+        return texto
+            .replace(/Programa‡Æo/g, 'Programação')
+            .replace(/Computa‡Æo/g, 'Computação')
+            .replace(/Inteligˆncia/g, 'Inteligência')
+            .replace(/L¢gica/g, 'Lógica')
+            .replace(/Orientada \.\.\. Objetos/g, 'Orientada a Objetos')
+            .replace(/C lculo/g, 'Cálculo')
+            .replace(/F¡sica/g, 'Física')
+            .replace(/Num,rico/g, 'Numérico');
+    };
+
     useEffect(() => {
-        carregarDadosInicial(); 
+        carregarTudo();
     }, []);
 
-    const carregarDadosInicial = async () => { 
+    const carregarTudo = async () => {
         try {
-            const [dadosEstudantes, dadosTurmas, dadosMatriculas] = await Promise.all([
+            const [dadosMatriculas, dadosEstudantes, dadosTurmas] = await Promise.all([
+                matriculaService.listarTodas(),
                 estudanteService.listarTodos(),
-                turmaService.listarTodas(),
-                matriculaService.listarTodas()
+                turmaService.listarTodas()
             ]);
-            
+            setMatriculas(dadosMatriculas);
             setEstudantes(dadosEstudantes);
             setTurmas(dadosTurmas);
-            setMatriculas(dadosMatriculas);
         } catch (error) {
             console.error("Erro ao carregar dados de matrícula", error);
         }
     };
 
-    const handleMatricular = async (e: React.FormEvent) => {
+    const estudanteOptions = estudantes.map(e => ({
+        value: e.matEstudante,
+        label: `${e.matEstudante} - ${e.usuario?.nome || 'Nome não identificado'}`
+    }));
+
+    const turmaOptions = turmas.map(t => ({
+        value: t.idTurma.toString(),
+        label: `ID: ${t.idTurma} | ${corrigirTexto(t.disciplina?.nome || t.disciplina?.codDisc)} - Turma ${t.numero} (${t.ano}/${t.semestre}º)`
+    }));
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedEstudante || !selectedTurma) {
-            alert('Por favor, selecione um estudante e uma turma.');
+            alert('⚠️ Por favor, selecione um estudante e uma turma!');
             return;
         }
 
@@ -43,113 +67,94 @@ export default function Matriculas() {
                 matEstudante: selectedEstudante,
                 idTurma: Number(selectedTurma)
             });
-            alert('Estudante matriculado com sucesso!');
-            carregarDadosInicial(); // Atualiza a tabela
-            setSelectedEstudante('');
+            alert('✅ Matrícula efetuada com sucesso!');
+            carregarTudo();
             setSelectedTurma('');
         } catch (error) {
-            alert('Erro ao realizar matrícula. O aluno já pode estar nesta turma.');
-        }
-    };
-
-    const handleCancelarMatricula = async (matricula: string, idTurma: number) => {
-        if (window.confirm('Deseja realmente cancelar esta matrícula?')) {
-            try {
-                await matriculaService.cancelar(matricula, idTurma);
-                alert('Matrícula cancelada!');
-                carregarDadosInicial();
-            } catch (error) {
-                alert('Erro ao cancelar matrícula.');
-            }
+            alert('❌ Erro ao matricular. Verifique se o aluno já está nesta turma.');
         }
     };
 
     return (
-        <div className="container mt-5">
-            <h2>Efetuar Matrícula</h2>
-            <hr />
+        <div className="container py-5">
+            <h2 className="display-6 fw-bold text-primary mb-4"> Efetuar Matrícula</h2>
 
-            <div className="card mb-4">
-                <div className="card-body">
-                    <form onSubmit={handleMatricular} className="row g-3 align-items-end">
+            <div className="card shadow-lg border-0 rounded-4 mb-5">
+                <div className="card-body p-4">
+                    <form onSubmit={handleSubmit} className="row g-4 align-items-end">
                         <div className="col-md-5">
-                            <label className="form-label fw-bold">Selecionar Estudante</label>
-                            <select 
-                                className="form-select" 
-                                value={selectedEstudante}
-                                onChange={e => setSelectedEstudante(e.target.value)}
-                                required
-                            >
-                                <option value="">-- Escolha o Aluno --</option>
-                                {estudantes.map(est => (
-                                    <option key={est.matEstudante} value={est.matEstudante}>
-                                        {est.matEstudante} - {est.nome}
-                                    </option>
-                                ))}
-                            </select>
+                            <label className="form-label fw-bold text-secondary">Estudante</label>
+                            <Select 
+                                options={estudanteOptions}
+                                placeholder="Digite a matrícula ou nome..."
+                                noOptionsMessage={() => "Nenhum estudante encontrado"}
+                                value={estudanteOptions.find(o => o.value === selectedEstudante) || null}
+                                onChange={(selected) => setSelectedEstudante(selected?.value || '')}
+                                isClearable
+                            />
                         </div>
 
                         <div className="col-md-5">
-                            <label className="form-label fw-bold">Selecionar Turma</label>
-                            <select 
-                                className="form-select" 
-                                value={selectedTurma}
-                                onChange={e => setSelectedTurma(e.target.value)}
-                                required
-                            >
-                                <option value="">-- Escolha a Turma --</option>
-                                {turmas.map(t => (
-                                    <option key={t.idTurma} value={t.idTurma}>
-                                        {/* CORRIGIDO: Acessa o nome da disciplina e o número da turma com segurança para não quebrar a tela */}
-                                        ID: {t.idTurma} | {t.disciplina?.nome || t.disciplina?.codDisc || "Sem Nome"} - Turma {t.numero ?? t.codigoTurma ?? "N/A"} ({t.ano}/{t.semestre}º)
-                                    </option>
-                                ))}
-                            </select>
+                            <label className="form-label fw-bold text-secondary">Turma</label>
+                            <Select 
+                                options={turmaOptions}
+                                placeholder="Digite a disciplina ou código..."
+                                noOptionsMessage={() => "Nenhuma turma encontrada"}
+                                value={turmaOptions.find(o => o.value === selectedTurma) || null}
+                                onChange={(selected) => setSelectedTurma(selected?.value || '')}
+                                isClearable
+                            />
                         </div>
 
-                        <div className="col-md-2">
-                            <button type="submit" className="btn btn-success w-100">Matricular</button>
+                        <div className="col-md-2 text-end">
+                            <button type="submit" className="btn btn-success btn-lg w-100 rounded-pill shadow-sm">
+                                Matricular
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <h4>Alunos Matriculados (Relação Cursa)</h4>
-            <table className="table table-striped table-hover mt-3">
-                <thead className="table-dark">
-                    <tr>
-                        <th>Matrícula Aluno</th>
-                        <th>Nome do Aluno</th>
-                        <th>Disciplina</th>
-                        <th>Turma</th>
-                        <th>Ano/Semestre</th>
-                        <th className="text-center">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {matriculas.length === 0 ? (
-                        <tr><td colSpan={6} className="text-center">Nenhuma matrícula registrada.</td></tr>
-                    ) : (
-                        matriculas.map((m, index) => (
-                            <tr key={index}>
-                                <td>{m.estudante?.matEstudante}</td>
-                                <td>{m.estudante?.nome || "Aluno Registrado"}</td>
-                                <td>{m.turma?.disciplina?.nome || "Sem Disciplina"}</td>
-                                <td>{m.turma?.numero ?? m.turma?.codigoTurma ?? "N/A"}</td>
-                                <td>{m.turma?.ano}/{m.turma?.semestre}º</td>
-                                <td className="text-center">
-                                    <button 
-                                        onClick={() => handleCancelarMatricula(m.estudante?.matEstudante, m.turma?.idTurma)}
-                                        className="btn btn-danger btn-sm"
-                                    >
-                                        🗑️ Cancelar Matrícula
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+            <h4 className="fw-bold mb-3 text-secondary">Alunos Matriculados (Relação Cursa)</h4>
+            <div className="table-responsive shadow-sm rounded-4">
+                <table className="table table-hover align-middle mb-0 bg-white">
+                    <thead className="table-dark">
+                        <tr>
+                            <th className="py-3 px-4">Matrícula Aluno</th>
+                            <th className="py-3">Nome do Aluno</th>
+                            <th className="py-3">Disciplina</th>
+                            <th className="py-3">Turma</th>
+                            <th className="py-3 text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {matriculas.length === 0 ? (
+                            <tr><td colSpan={5} className="text-center py-4 text-muted">Nenhuma matrícula registrada no sistema.</td></tr>
+                        ) : (
+                            matriculas.map(m => (
+                                <tr key={`${m.id.matEstudante}-${m.id.idTurma}`}>
+                                    <td className="px-4"><span className="badge bg-primary px-3 py-2 rounded-pill">{m.estudante?.matEstudante}</span></td>
+                                    <td className="fw-medium">{m.estudante?.usuario?.nome || "Nome não identificado"}</td>
+                                    <td className="fw-bold text-secondary">{corrigirTexto(m.turma?.disciplina?.nome || m.turma?.disciplina?.codDisc)}</td>
+                                    <td>Turma {m.turma?.numero} <br/><small className="text-muted">{m.turma?.ano}/{m.turma?.semestre}º</small></td>
+                                    <td className="text-center">
+                                        <button 
+                                            className="btn btn-sm btn-outline-danger rounded-pill px-3 shadow-sm"
+                                            onClick={async () => {
+                                                if(window.confirm('Tem certeza que deseja cancelar esta matrícula?')) {
+                                                    await matriculaService.cancelar(m.id.matEstudante, m.id.idTurma);
+                                                    carregarTudo();
+                                                }
+                                            }}>
+                                             Cancelar
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
