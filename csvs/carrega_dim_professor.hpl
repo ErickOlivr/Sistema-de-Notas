@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipeline>
+  <info>
+    <pipeline_version/>
+    <capture_transform_performance>N</capture_transform_performance>
+    <transform_performance_capturing_delay>1000</transform_performance_capturing_delay>
+    <transform_performance_capturing_size_limit>100</transform_performance_capturing_size_limit>
+    <pipeline_type>Normal</pipeline_type>
+    <pipeline_status>0</pipeline_status>
+    <parameters/>
+    <name>carrega_dim_semestre</name>
+    <name_sync_with_filename>N</name_sync_with_filename>
+    <description/>
+    <extended_description/>
+    <created_user>-</created_user>
+    <modified_user>-</modified_user>
+    <created_date>2026/07/12 23:50:00.000</created_date>
+    <modified_date>2026/07/12 23:50:00.000</modified_date>
+  </info>
+
+  <transform>
+    <type>CSVInput</type>
+    <name>Ler Turmas 2024</name>
+    <filename>C:\Users\omeca\Downloads\csvs\tur-csv-turmas-de-2024.csv</filename>
+    <include_filename>N</include_filename>
+    <rownum_field/>
+    <header>Y</header>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>N</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <encoding>UTF-8</encoding>
+    <newline_possible>N</newline_possible>
+    <schemaDefinition/>
+    <ignoreFields>N</ignoreFields>
+    <fields>
+      <field>
+        <name>ano</name>
+        <type>Integer</type>
+        <format>#</format>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>periodo</name>
+        <type>Integer</type>
+        <format>#</format>
+        <trim_type>both</trim_type>
+      </field>
+    </fields>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+    <GUI>
+      <xloc>112</xloc>
+      <yloc>176</yloc>
+    </GUI>
+  </transform>
+
+  <transform>
+    <type>SelectValues</type>
+    <name>Selecionar Ano e Periodo</name>
+    <fields>
+      <field><name>ano</name><rename/></field>
+      <field><name>periodo</name><rename/></field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+    <GUI>
+      <xloc>288</xloc>
+      <yloc>176</yloc>
+    </GUI>
+  </transform>
+
+  <transform>
+    <type>SortRows</type>
+    <name>Ordenar</name>
+    <fields>
+      <field>
+        <name>ano</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>periodo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+    <GUI>
+      <xloc>448</xloc>
+      <yloc>176</yloc>
+    </GUI>
+  </transform>
+
+  <transform>
+    <type>Unique</type>
+    <name>Remover Duplicados</name>
+    <count_rows>N</count_rows>
+    <fields>
+      <field>
+        <name>ano</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>periodo</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+    </fields>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+    <GUI>
+      <xloc>592</xloc>
+      <yloc>176</yloc>
+    </GUI>
+  </transform>
+
+  <transform>
+    <type>InsertUpdate</type>
+    <name>Gravar dim_semestre</name>
+    <lookup>
+      <key>
+        <name>ano</name>
+        <field>ano</field>
+        <condition>=</condition>
+      </key>
+      <key>
+        <name>periodo</name>
+        <field>semestre</field>
+        <condition>=</condition>
+      </key>
+      <value>
+        <name>ano</name>
+        <rename>ano</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>semestre</name>
+        <rename>periodo</rename>
+        <update>Y</update>
+      </value>
+      <schema>public</schema>
+      <table>dim_semestre</table>
+    </lookup>
+    <commit>100</commit>
+    <update_bypassed>Y</update_bypassed>
+    <connection>dw_aws</connection>
+    <distribute>Y</distribute>
+    <copies>1</copies>
+    <GUI>
+      <xloc>768</xloc>
+      <yloc>176</yloc>
+    </GUI>
+  </transform>
+
+  <order>
+    <hop><from>Ler Turmas 2024</from><to>Selecionar Ano e Periodo</to><enabled>Y</enabled></hop>
+    <hop><from>Selecionar Ano e Periodo</from><to>Ordenar</to><enabled>Y</enabled></hop>
+    <hop><from>Ordenar</to><to>Remover Duplicados</to><enabled>Y</enabled></hop>
+    <hop><from>Remover Duplicados</to><to>Gravar dim_semestre</to><enabled>Y</enabled></hop>
+  </order>
+</pipeline>
