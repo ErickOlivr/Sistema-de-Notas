@@ -4,31 +4,36 @@ import Turmas from './pages/Turmas';
 import Disciplinas from './pages/Disciplinas';
 import Matriculas from './pages/Matriculas';
 import Notas from './pages/Notas';
+import DashboardMongo from './pages/DashboardMongoDB';
 
 function App() {
-  const [abaAtiva, setAbaAtiva] = useState<'usuarios' | 'estudantes' | 'turmas' | 'disciplinas' | 'matriculas' | 'notas'>('usuarios');
+  const [abaAtiva, setAbaAtiva] = useState<'usuarios' | 'disciplinas' | 'turmas' | 'matriculas' | 'notas' | 'dashboardMongo'>('usuarios');
 
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
           <a className="navbar-brand" href="#">Sistema Universitário</a>
-          <div className="navbar-nav">
+          <div className="navbar-nav me-auto">
             <button className={`nav-link btn btn-link ${abaAtiva === 'usuarios' ? 'active fw-bold' : ''}`} onClick={() => setAbaAtiva('usuarios')}>Usuários</button>
             <button className={`nav-link btn btn-link ${abaAtiva === 'disciplinas' ? 'active fw-bold' : ''}`} onClick={() => setAbaAtiva('disciplinas')}>Disciplinas</button>
             <button className={`nav-link btn btn-link ${abaAtiva === 'turmas' ? 'active fw-bold' : ''}`} onClick={() => setAbaAtiva('turmas')}>Turmas</button>
             <button className={`nav-link btn btn-link ${abaAtiva === 'matriculas' ? 'active fw-bold' : ''}`} onClick={() => setAbaAtiva('matriculas')}>Matrículas</button>
             <button className={`nav-link btn btn-link ${abaAtiva === 'notas' ? 'active fw-bold' : ''}`} onClick={() => setAbaAtiva('notas')}>Lançar Notas</button>
           </div>
+          <div className="navbar-nav">
+            <button className={`nav-link btn btn-link text-success ${abaAtiva === 'dashboardMongo' ? 'active fw-bold' : ''}`} onClick={() => setAbaAtiva('dashboardMongo')}>🍃 Dashboard MongoDB</button>
+          </div>
         </div>
       </nav>
 
-      <main>
+      <main className="container mt-4">
         {abaAtiva === 'usuarios' && <Usuarios />}
         {abaAtiva === 'disciplinas' && <Disciplinas />}
         {abaAtiva === 'turmas' && <Turmas />}
         {abaAtiva === 'matriculas' && <Matriculas />}
         {abaAtiva === 'notas' && <Notas />}
+        {abaAtiva === 'dashboardMongo' && <DashboardMongo />}
       </main>
     </div>
   );

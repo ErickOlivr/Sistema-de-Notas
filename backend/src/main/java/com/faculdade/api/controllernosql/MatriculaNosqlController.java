@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/nosql/matriculas") // Rota diferenciada para não chocar com o SQL
 public class MatriculaNosqlController {
@@ -117,5 +118,21 @@ public class MatriculaNosqlController {
         // Se a integridade estiver correta, persiste a turma na AWS
         TurmaNosql turmaSalva = turmaNosqlRepository.save(novaTurma);
         return ResponseEntity.status(HttpStatus.CREATED).body(turmaSalva);
+    }
+    @GetMapping("/cursos")
+    public ResponseEntity<List<CursoNosql>> listarCursos() {
+        return ResponseEntity.ok(cursoNosqlRepository.findAll());
+    }
+
+    // Endpoint: GET /api/nosql/matriculas/disciplinas
+    @GetMapping("/disciplinas")
+    public ResponseEntity<List<DisciplinaNosql>> listarDisciplinas() {
+        return ResponseEntity.ok(disciplinaNosqlRepository.findAll());
+    }
+
+    // Endpoint: GET /api/nosql/matriculas/turmas
+    @GetMapping("/turmas")
+    public ResponseEntity<List<TurmaNosql>> listarTurmas() {
+        return ResponseEntity.ok(turmaNosqlRepository.findAll());
     }
 }
